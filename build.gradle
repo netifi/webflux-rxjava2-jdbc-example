@@ -1,26 +1,12 @@
-buildscript {
-    ext {
-        springBootVersion = '2.0.3.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-}
-
 plugins {
+    id 'com.gradle.build-scan' version '1.14'
     id 'java'
     id 'application'
-    id 'com.gradle.build-scan' version '1.11'
     id 'org.flywaydb.flyway' version '4.2.0'
+    id 'com.github.hierynomus.license' version '0.14.0'
+    id 'org.springframework.boot' version '2.0.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
-
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
@@ -31,6 +17,13 @@ buildScan {
 group = 'io.netifi.asynchdb.webflux'
 version = '0.1.0'
 sourceCompatibility = 1.8
+mainClassName = 'io.netifi.asynchdb.webflux.Main'
+
+dependencyManagement {
+    imports {
+        mavenBom "io.spring.platform:platform-bom:Cairo-SR1"
+    }
+}
 
 repositories {
     jcenter()
@@ -38,17 +31,10 @@ repositories {
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-webflux')
-    compile 'org.springframework:spring-webflux:5.0.7.RELEASE'
-
-    compile 'io.netty:netty-buffer:4.1.25.Final'
-    compile 'io.netty:netty-transport:4.1.25.Final'
-
+    compile 'org.springframework.boot:spring-boot-starter-webflux'
     compile 'com.github.davidmoten:rxjava2-jdbc:0.1-RC35'
     compile 'com.h2database:h2:1.4.196'
 }
-
-mainClassName = 'io.netifi.asynchdb.webflux.Main'
 
 flyway {
     url = 'jdbc:h2:./build/mydatabase'
@@ -58,3 +44,8 @@ flyway {
 clean.dependsOn(flywayClean)
 build.dependsOn(flywayMigrate)
 run.dependsOn(build)
+
+license {
+    header rootProject.file('codequality/HEADER')
+    strictCheck true
+}

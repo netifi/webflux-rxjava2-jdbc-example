@@ -1,15 +1,3 @@
-# rxjava-jdbc-example
-An example of using [Spring WebFlux](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html) and [rxjava-jdbc](https://github.com/davidmoten/rxjava-jdbc) to interact with SQL databases.
-
-## Running the Example
-The example can be run using the following command:
-
-    $ ./gradlew clean run
-
-## Bugs and Feedback
-For bugs, questions, and discussions please use the [Github Issues](https://github.com/netifi/webflux-rxjava2-jdbc-example/issues).
-
-## License
 Copyright 2017 Netifi Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
