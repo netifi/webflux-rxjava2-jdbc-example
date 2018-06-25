@@ -1,0 +1,60 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.gradle.build-scan' version '1.11'
+    id 'org.flywaydb.flyway' version '4.2.0'
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+    publishAlways()
+}
+
+group = 'io.netifi.asynchdb.webflux'
+version = '0.1.0'
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-webflux')
+    compile 'org.springframework:spring-webflux:5.0.7.RELEASE'
+
+    compile 'io.netty:netty-buffer:4.1.25.Final'
+    compile 'io.netty:netty-transport:4.1.25.Final'
+
+    compile 'com.github.davidmoten:rxjava2-jdbc:0.1-RC35'
+    compile 'com.h2database:h2:1.4.196'
+}
+
+mainClassName = 'io.netifi.asynchdb.webflux.Main'
+
+flyway {
+    url = 'jdbc:h2:./build/mydatabase'
+    user = 'sa'
+    password = 'sa'
+}
+clean.dependsOn(flywayClean)
+build.dependsOn(flywayMigrate)
+run.dependsOn(build)
